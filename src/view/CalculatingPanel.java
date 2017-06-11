@@ -1,5 +1,7 @@
 package view;
 
+import controller.Controller;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -9,6 +11,7 @@ import java.awt.event.ActionListener;
  * Created by anonymous on 05.06.2017.
  */
 public class CalculatingPanel {
+    private Controller controller;
     private JPanel calculatingPanel = new JPanel(new BorderLayout());
     private JTextField scoreboard = new JTextField(20);
     private JPanel buttonPanel = new JPanel(new GridLayout(8, 3));
@@ -42,7 +45,8 @@ public class CalculatingPanel {
     private boolean dot = false;
     private int countBrackets = 0;
 
-    public CalculatingPanel() {
+    public CalculatingPanel(Controller controller) {
+        this.controller = controller;
         scoreboard.setFont(new Font("Scoreboard", Font.ITALIC, 30));
         buttonXSquared.setEnabled(false);
         buttonXDegreeY.setEnabled(false);
@@ -96,10 +100,12 @@ public class CalculatingPanel {
         button0.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (scoreboard.getText().equals("0") || isAddZero()
-                        || scoreboard.getText().charAt(scoreboard.getText().length() - 1) == ')') {
-                } else scoreboard.setText(scoreboard.getText() + "0");
-            }
+                if (scoreboard.getText().length()==0)
+                    scoreboard.setText("0");
+                else if (scoreboard.getText().equals("0") || isAddZero()
+                            || scoreboard.getText().charAt(scoreboard.getText().length() - 1) == ')') {
+                    } else scoreboard.setText(scoreboard.getText() + "0");
+                }
         });
         button1.addActionListener(new ActionListener() {
             @Override
@@ -194,9 +200,9 @@ public class CalculatingPanel {
         buttonDot.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (scoreboard.getText().equals("")) {}
-                else if (isOperation()||scoreboard.getText().charAt(scoreboard.getText().length() - 1) == ')') {}
-                else if (!dot) {
+                if (scoreboard.getText().equals("")) {
+                } else if (isOperation() || scoreboard.getText().charAt(scoreboard.getText().length() - 1) == ')') {
+                } else if (!dot) {
                     scoreboard.setText(scoreboard.getText() + ".");
                     dot = true;
                 }
@@ -220,7 +226,7 @@ public class CalculatingPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (!scoreboard.getText().equals("")) {
-                    if (!isOperation()||scoreboard.getText().charAt(scoreboard.getText().length() - 1) == ')') {
+                    if (!isOperation() || scoreboard.getText().charAt(scoreboard.getText().length() - 1) == ')') {
                         if (scoreboard.getText().charAt(scoreboard.getText().length() - 1) != '.') {
                             scoreboard.setText(scoreboard.getText() + "+");
                             dot = false;
@@ -233,7 +239,7 @@ public class CalculatingPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (!scoreboard.getText().equals("")) {
-                    if (!isOperation()||scoreboard.getText().charAt(scoreboard.getText().length() - 1) == ')') {
+                    if (!isOperation() || scoreboard.getText().charAt(scoreboard.getText().length() - 1) == ')') {
                         if (scoreboard.getText().charAt(scoreboard.getText().length() - 1) != '.') {
                             scoreboard.setText(scoreboard.getText() + "-");
                             dot = false;
@@ -246,7 +252,7 @@ public class CalculatingPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (!scoreboard.getText().equals("")) {
-                    if (!isOperation()||scoreboard.getText().charAt(scoreboard.getText().length() - 1) == ')') {
+                    if (!isOperation() || scoreboard.getText().charAt(scoreboard.getText().length() - 1) == ')') {
                         if (scoreboard.getText().charAt(scoreboard.getText().length() - 1) != '.') {
                             scoreboard.setText(scoreboard.getText() + "*");
                             dot = false;
@@ -259,7 +265,7 @@ public class CalculatingPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (!scoreboard.getText().equals("")) {
-                    if (!isOperation()||scoreboard.getText().charAt(scoreboard.getText().length() - 1) == ')') {
+                    if (!isOperation() || scoreboard.getText().charAt(scoreboard.getText().length() - 1) == ')') {
                         if (scoreboard.getText().charAt(scoreboard.getText().length() - 1) != '.') {
                             scoreboard.setText(scoreboard.getText() + "/");
                             dot = false;
@@ -272,7 +278,7 @@ public class CalculatingPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (!scoreboard.getText().equals("")) {
-                    if (!isOperation()||scoreboard.getText().charAt(scoreboard.getText().length() - 1) == ')') {
+                    if (!isOperation() || scoreboard.getText().charAt(scoreboard.getText().length() - 1) == ')') {
                         if (scoreboard.getText().charAt(scoreboard.getText().length() - 1) != '.') {
                             scoreboard.setText(scoreboard.getText() + "%");
                             dot = false;
@@ -284,15 +290,14 @@ public class CalculatingPanel {
         buttonLeft.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (scoreboard.getText().length()>0) {
-                    if (isOperation()&&scoreboard.getText().charAt(scoreboard.getText().length() - 1) != ')') {
+                if (scoreboard.getText().length() > 0) {
+                    if (isOperation() && scoreboard.getText().charAt(scoreboard.getText().length() - 1) != ')') {
                         scoreboard.setText(scoreboard.getText() + "(");
                         dot = false;
                         countBrackets++;
                     }
-                }
-                else {
-                    scoreboard.setText(scoreboard.getText()+"(");
+                } else {
+                    scoreboard.setText(scoreboard.getText() + "(");
                     dot = false;
                     countBrackets++;
                 }
@@ -301,7 +306,7 @@ public class CalculatingPanel {
         buttonRight.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if(countBrackets>0){
+                if (countBrackets > 0) {
                     if (scoreboard.getText().charAt(scoreboard.getText().length() - 1) != '.' && !isOperation()) {
                         scoreboard.setText(scoreboard.getText() + ")");
                         dot = false;
@@ -313,17 +318,18 @@ public class CalculatingPanel {
         buttonSQRT.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                    if (isOperation()||scoreboard.getText().equals("")) {
-                        scoreboard.setText(scoreboard.getText() + "sqrt(");
-                        countBrackets++;
+                if (isOperation() || scoreboard.getText().equals("")) {
+                    scoreboard.setText(scoreboard.getText() + "sqrt(");
+                    countBrackets++;
                 }
             }
         });
         buttonInverse.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (isOperation()||scoreboard.getText().equals("")) {
-                    scoreboard.setText(scoreboard.getText() + "1/");
+                if (!scoreboard.getText().equals("") && countBrackets == 0 &&
+                        scoreboard.getText().charAt(scoreboard.getText().length() - 1) != '.') {
+                    scoreboard.setText("1/(" + scoreboard.getText() + ")");
                 }
             }
         });
@@ -344,6 +350,15 @@ public class CalculatingPanel {
                     if (!isOperation()) {
                         scoreboard.setText(scoreboard.getText() + "^");
                     }
+                }
+            }
+        });
+        buttonStart.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (!scoreboard.getText().isEmpty()&&countBrackets==0) {
+                    scoreboard.setText(controller.startCalc(scoreboard.getText()));
+                    dot=true;
                 }
             }
         });

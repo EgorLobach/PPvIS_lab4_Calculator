@@ -15,7 +15,7 @@ import java.awt.event.ActionListener;
 public class MainFrame {
     private Controller controller;
     private JFrame headFrame = new JFrame();
-    private CalculatingPanel calculatingPanel = new CalculatingPanel();
+    private CalculatingPanel calculatingPanel;
     private JPanel treePanel = new JPanel();
 
 
@@ -26,6 +26,7 @@ public class MainFrame {
         headFrame.setSize(dimension);
         headFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         headFrame.setLayout(new BorderLayout());
+        calculatingPanel = new CalculatingPanel(this.controller);
     }
 
     public void initMainFrame() {
