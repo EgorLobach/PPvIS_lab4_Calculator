@@ -9,6 +9,25 @@ public class DataBase {
     private boolean isOperator(char symbol) {
         return symbol == '+' || symbol == '-' || symbol == '*' || symbol == '/' || symbol == '%' || symbol == '^';
     }
+    private String optimizeInputString(String inputString){
+        inputString = inputString.replace(" ", "").replace("(-", "(0-");
+        if (inputString.charAt(0) == '-') {
+            inputString = "0" + inputString;
+        }
+        while (inputString.indexOf("sqrt")>-1){
+            int temp = 1;
+            for (int i = inputString.indexOf("sqrt")+5; i<inputString.length();i++){
+                if (inputString.charAt(i) == '(') temp++;
+                if (inputString.charAt(i) == ')') temp--;
+                if (temp==0) {
+                    inputString = inputString.substring(0, i+1)+"^0.5"+inputString.substring(i+1);
+                    break;
+                }
+            }
+            inputString = inputString.substring(0, inputString.indexOf("sqrt"))+ inputString.substring(inputString.indexOf("sqrt")+4);
+        }
+        return inputString;
+    }
 
     int priority(char operator) {
         if (operator == '^')
@@ -50,23 +69,7 @@ public class DataBase {
     }
 
     public double eval(String inputString) {
-        inputString = inputString.replace(" ", "").replace("(-", "(0-");
-        if (inputString.charAt(0) == '-') {
-            inputString = "0" + inputString;
-        }
-        while (inputString.indexOf("sqrt")>-1){
-            int temp = 1;
-            for (int i = inputString.indexOf("sqrt")+5; i<inputString.length();i++){
-                if (inputString.charAt(i) == '(') temp++;
-                if (inputString.charAt(i) == ')') temp--;
-                if (temp==0) {
-                    inputString = inputString.substring(0, i+1)+"^0.5"+inputString.substring(i+1);
-                    break;
-                }
-            }
-            inputString = inputString.substring(0, inputString.indexOf("sqrt"))+ inputString.substring(inputString.indexOf("sqrt")+4);
-        }
-
+        inputString=optimizeInputString(inputString);
         LinkedList<Double> someNumbers = new LinkedList<>();
         LinkedList<Character> someOperators = new LinkedList<>();
         for (int i = 0; i < inputString.length(); i++) {
@@ -97,9 +100,51 @@ public class DataBase {
         }
         while (!someOperators.isEmpty()) {
             letGo(someNumbers, someOperators.removeLast());
-
         }
         return someNumbers.get(0);
+    }
 
+    private void hangUp(LinkedList<Character> someOperators, LinkedList<Node> someNode){
+        Node node = new Node(someOperators.removeLast());
+        node.setRight(someNode.removeLast());
+        node.setLeft(someNode.removeLast());
+        someNode.add(node);
+    }
+
+    public Node buildNodes(String inputString) {
+        inputString = optimizeInputString(inputString);
+        LinkedList<Node> someNode = new LinkedList<>();
+        LinkedList<Character> someOperators = new LinkedList<>();
+        Node node;
+        for (int i = 0; i < inputString.length(); i++) {
+            char symbol = inputString.charAt(i);
+            if (symbol == '(') {
+                someOperators.add('(');
+            } else if (symbol == ')') {
+                while (someOperators.getLast() != '(') {
+                    hangUp(someOperators, someNode);
+                }
+                someOperators.removeLast();
+            } else if (isOperator(symbol)) {
+                while (!someOperators.isEmpty() &&
+                        priority(someOperators.getLast()) >= priority(symbol)) {
+                    hangUp(someOperators, someNode);
+                }
+                someOperators.add(symbol);
+            } else {
+                String operand = "";
+                while (i < inputString.length() &&
+                        (Character.isDigit(inputString.charAt(i)) || inputString.charAt(i) == '.')) {
+                    operand += inputString.charAt(i++);
+                }
+                --i;
+                node = new Node(operand);
+                someNode.add(node);
+            }
+        }
+        while (!someOperators.isEmpty()) {
+            hangUp(someOperators, someNode);
+        }
+        return someNode.get(0);
     }
 }
