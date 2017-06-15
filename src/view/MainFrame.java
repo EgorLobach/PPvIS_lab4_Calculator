@@ -6,6 +6,8 @@ import model.Operators;
 import javax.swing.*;
 import javax.swing.event.TreeExpansionEvent;
 import javax.swing.event.TreeExpansionListener;
+import javax.swing.event.TreeSelectionEvent;
+import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -399,8 +401,7 @@ public class MainFrame {
     }
 
     private void treeAction() {
-        tree.addTreeExpansionListener(
-                new TreeExpansionListener() {
+        tree.addTreeExpansionListener(new TreeExpansionListener() {
                     public void treeExpanded(TreeExpansionEvent event) {
                         expression.setText(expression.getText().replace(
                                 String.valueOf(getResult((DefaultMutableTreeNode) event.getPath().getLastPathComponent())),
