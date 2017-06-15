@@ -10,4 +10,5 @@ public class Operators {
     public static final char DIVIDE = '/';
     public static final char MOD = '%';
     public static final char DEGREE = '^';
+    public static final String ALL_OPERATORS = "+-*/%^";
 }

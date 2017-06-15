@@ -1,8 +1,12 @@
 package view;
 
 import controller.Controller;
+import model.Operators;
 
 import javax.swing.*;
+import javax.swing.event.*;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.ExpandVetoException;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -15,6 +19,8 @@ public class MainFrame {
     private JFrame headFrame = new JFrame();
     private JPanel calculatingPanel = new JPanel(new BorderLayout());
     private JTextField scoreboard = new JTextField(20);
+    private JTextField expression = new JTextField(20);
+    private String result = "";
     private JPanel buttonPanel = new JPanel(new GridLayout(8, 3));
     private JButton button0 = new JButton("0");
     private JButton button1 = new JButton("1");
@@ -56,11 +62,15 @@ public class MainFrame {
         headFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         headFrame.setLayout(new BorderLayout());
         scoreboard.setFont(new Font("Scoreboard", Font.ITALIC, 30));
+        expression.setFont(new Font("Expression", Font.ITALIC, 20));
         buttonXSquared.setEnabled(false);
         buttonXDegreeY.setEnabled(false);
+        treePanel.setLayout(new BorderLayout());
     }
 
     public void initMainFrame() {
+
+
         buttonAction();
         buttonPanel.add(button1);
         buttonPanel.add(button2);
@@ -92,14 +102,15 @@ public class MainFrame {
         calculatingPanel.add(buttonPanel, BorderLayout.CENTER);
         calculatingPanel.add(degreePanel, BorderLayout.EAST);
         headFrame.add(calculatingPanel, BorderLayout.CENTER);
-        headFrame.add(initTreePanel(tree), BorderLayout.WEST);
+        headFrame.add(initTreePanel(), BorderLayout.WEST);
         headFrame.setVisible(true);
     }
 
-    public JPanel initTreePanel(JTree tree) {
-        scrollPane = new JScrollPane(this.tree);
+    public JPanel initTreePanel() {
+        scrollPane = new JScrollPane(tree);
         scrollPane.setPreferredSize(new Dimension(200, 500));
-        treePanel.add(scrollPane);
+        treePanel.add(expression, BorderLayout.NORTH);
+        treePanel.add(scrollPane, BorderLayout.CENTER);
         return treePanel;
     }
 
@@ -112,7 +123,11 @@ public class MainFrame {
                     dot=true;
                     treePanel.removeAll();
                     tree = new JTree(controller.buildTree());
-                    headFrame.add(initTreePanel(tree), BorderLayout.WEST);
+                    for(int i = 0; i < tree.getRowCount(); i ++) tree.expandRow(i);
+                    result = getExpression((DefaultMutableTreeNode) tree.getPathForRow(0).getLastPathComponent());
+                    expression.setText(result);
+                    treeAction();
+                    headFrame.add(initTreePanel(), BorderLayout.WEST);
                     headFrame.validate();
                     headFrame.repaint();
                 }
@@ -382,6 +397,29 @@ public class MainFrame {
             }
         });
     }
+    public void treeAction(){
+        tree.addTreeExpansionListener(
+                new TreeExpansionListener() {
+                    public void treeExpanded(TreeExpansionEvent event) {
+                        expression.setText(expression.getText().replace(
+                                String.valueOf(getResult((DefaultMutableTreeNode)event.getPath().getLastPathComponent())),
+                                getExpression((DefaultMutableTreeNode)event.getPath().getLastPathComponent())));
+                    }
+
+                    public void treeCollapsed(TreeExpansionEvent event) {
+                        if (expression.getText().indexOf(getExpression((DefaultMutableTreeNode)event.getPath().getLastPathComponent()))<0) {
+                            expression.setText(result.replace(
+                                    getExpression((DefaultMutableTreeNode) event.getPath().getLastPathComponent()),
+                                    String.valueOf(getResult((DefaultMutableTreeNode) event.getPath().getLastPathComponent()))));
+                        }
+                        else
+                            expression.setText(expression.getText().replace(
+                                    getExpression((DefaultMutableTreeNode) event.getPath().getLastPathComponent()),
+                                    String.valueOf(getResult((DefaultMutableTreeNode) event.getPath().getLastPathComponent()))));
+                    }
+                }
+        );
+    }
 
     private boolean isAddZero() {
         if (scoreboard.getText().length() > 1) {
@@ -399,4 +437,77 @@ public class MainFrame {
         } else return false;
     }
 
+    private double getResult(DefaultMutableTreeNode currentNode){
+        Double firstOperand = 0.0;
+        Double secondOperand = 0.0;
+        if (currentNode.isLeaf()) return Double.valueOf(currentNode.getUserObject().toString());
+        else {
+            DefaultMutableTreeNode firstChildr = (DefaultMutableTreeNode) currentNode.getChildAt(0);
+            DefaultMutableTreeNode secondChildr = (DefaultMutableTreeNode) currentNode.getChildAt(1);
+            if (Operators.ALL_OPERATORS.indexOf(firstChildr.getUserObject().toString()) > -1) {
+                firstOperand = getResult(firstChildr);
+            } else {
+                firstOperand = Double.valueOf(firstChildr.getUserObject().toString());
+            }
+            if (Operators.ALL_OPERATORS.indexOf(secondChildr.getUserObject().toString()) > -1) {
+                secondOperand = getResult(secondChildr);
+            } else {
+                secondOperand = Double.valueOf(secondChildr.getUserObject().toString());
+            }
+            switch (currentNode.getUserObject().toString().charAt(0)) {
+                case Operators.PLUS:
+                    return firstOperand + secondOperand;
+                case Operators.MINUS:
+                    return firstOperand - secondOperand;
+                case Operators.MULTIPLY:
+                    return firstOperand * secondOperand;
+                case Operators.DIVIDE:
+                    return firstOperand / secondOperand;
+                case Operators.MOD:
+                    return firstOperand % secondOperand;
+                case Operators.DEGREE:
+                    return Math.pow(firstOperand, secondOperand);
+                default:
+                    System.out.println("Oops");
+                    return 0;
+            }
+        }
+    }
+
+    private String getExpression(DefaultMutableTreeNode currentNode){
+        String firstOperand = "";
+        String secondOperand = "";
+        if (currentNode.isLeaf()) return currentNode.getUserObject().toString();
+        else {
+            DefaultMutableTreeNode firstChildr = (DefaultMutableTreeNode) currentNode.getChildAt(0);
+            DefaultMutableTreeNode secondChildr = (DefaultMutableTreeNode) currentNode.getChildAt(1);
+            if (Operators.ALL_OPERATORS.indexOf(firstChildr.getUserObject().toString()) > -1) {
+                firstOperand = getExpression(firstChildr);
+            } else {
+                firstOperand = (firstChildr.getUserObject().toString());
+            }
+            if (Operators.ALL_OPERATORS.indexOf(secondChildr.getUserObject().toString()) > -1) {
+                secondOperand = getExpression(secondChildr);
+            } else {
+                secondOperand = (secondChildr.getUserObject().toString());
+            }
+            switch (currentNode.getUserObject().toString().charAt(0)) {
+                case Operators.PLUS:
+                    return "(" + firstOperand +"+"+ secondOperand + ")";
+                case Operators.MINUS:
+                    return "(" + firstOperand +"-"+ secondOperand + ")";
+                case Operators.MULTIPLY:
+                    return "(" + firstOperand +"*"+ secondOperand + ")";
+                case Operators.DIVIDE:
+                    return "(" + firstOperand +"/"+ secondOperand + ")";
+                case Operators.MOD:
+                    return "(" + firstOperand +"%"+ secondOperand + ")";
+                case Operators.DEGREE:
+                    return "(" + firstOperand+"^"+ secondOperand + ")";
+                default:
+                    System.out.println("Oops");
+                    return "";
+            }
+        }
+    }
 }
