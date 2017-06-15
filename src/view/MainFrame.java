@@ -4,9 +4,9 @@ import controller.Controller;
 import model.Operators;
 
 import javax.swing.*;
-import javax.swing.event.*;
+import javax.swing.event.TreeExpansionEvent;
+import javax.swing.event.TreeExpansionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.ExpandVetoException;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -56,7 +56,7 @@ public class MainFrame {
     private JTree tree;
 
     public MainFrame(String frame, Dimension dimension, Controller controller) {
-        this.controller =controller;
+        this.controller = controller;
         headFrame.setTitle(frame);
         headFrame.setSize(dimension);
         headFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -106,7 +106,7 @@ public class MainFrame {
         headFrame.setVisible(true);
     }
 
-    public JPanel initTreePanel() {
+    private JPanel initTreePanel() {
         scrollPane = new JScrollPane(tree);
         scrollPane.setPreferredSize(new Dimension(200, 500));
         treePanel.add(expression, BorderLayout.NORTH);
@@ -118,12 +118,12 @@ public class MainFrame {
         buttonStart.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (!scoreboard.getText().isEmpty()&&countBrackets==0) {
+                if (!scoreboard.getText().isEmpty() && countBrackets == 0) {
                     scoreboard.setText(controller.startCalc(scoreboard.getText()));
-                    dot=true;
+                    dot = true;
                     treePanel.removeAll();
                     tree = new JTree(controller.buildTree());
-                    for(int i = 0; i < tree.getRowCount(); i ++) tree.expandRow(i);
+                    for (int i = 0; i < tree.getRowCount(); i++) tree.expandRow(i);
                     result = getExpression((DefaultMutableTreeNode) tree.getPathForRow(0).getLastPathComponent());
                     expression.setText(result);
                     treeAction();
@@ -143,7 +143,7 @@ public class MainFrame {
         button0.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (scoreboard.getText().length()==0)
+                if (scoreboard.getText().length() == 0)
                     scoreboard.setText("0");
                 else if (scoreboard.getText().equals("0") || isAddZero()
                         || scoreboard.getText().charAt(scoreboard.getText().length() - 1) == ')') {
@@ -397,22 +397,22 @@ public class MainFrame {
             }
         });
     }
-    public void treeAction(){
+
+    private void treeAction() {
         tree.addTreeExpansionListener(
                 new TreeExpansionListener() {
                     public void treeExpanded(TreeExpansionEvent event) {
                         expression.setText(expression.getText().replace(
-                                String.valueOf(getResult((DefaultMutableTreeNode)event.getPath().getLastPathComponent())),
-                                getExpression((DefaultMutableTreeNode)event.getPath().getLastPathComponent())));
+                                String.valueOf(getResult((DefaultMutableTreeNode) event.getPath().getLastPathComponent())),
+                                getExpression((DefaultMutableTreeNode) event.getPath().getLastPathComponent())));
                     }
 
                     public void treeCollapsed(TreeExpansionEvent event) {
-                        if (expression.getText().indexOf(getExpression((DefaultMutableTreeNode)event.getPath().getLastPathComponent()))<0) {
+                        if (!expression.getText().contains(getExpression((DefaultMutableTreeNode) event.getPath().getLastPathComponent()))) {
                             expression.setText(result.replace(
                                     getExpression((DefaultMutableTreeNode) event.getPath().getLastPathComponent()),
                                     String.valueOf(getResult((DefaultMutableTreeNode) event.getPath().getLastPathComponent()))));
-                        }
-                        else
+                        } else
                             expression.setText(expression.getText().replace(
                                     getExpression((DefaultMutableTreeNode) event.getPath().getLastPathComponent()),
                                     String.valueOf(getResult((DefaultMutableTreeNode) event.getPath().getLastPathComponent()))));
@@ -437,22 +437,22 @@ public class MainFrame {
         } else return false;
     }
 
-    private double getResult(DefaultMutableTreeNode currentNode){
+    private double getResult(DefaultMutableTreeNode currentNode) {
         Double firstOperand = 0.0;
         Double secondOperand = 0.0;
         if (currentNode.isLeaf()) return Double.valueOf(currentNode.getUserObject().toString());
         else {
-            DefaultMutableTreeNode firstChildr = (DefaultMutableTreeNode) currentNode.getChildAt(0);
-            DefaultMutableTreeNode secondChildr = (DefaultMutableTreeNode) currentNode.getChildAt(1);
-            if (Operators.ALL_OPERATORS.indexOf(firstChildr.getUserObject().toString()) > -1) {
-                firstOperand = getResult(firstChildr);
+            DefaultMutableTreeNode firstChild = (DefaultMutableTreeNode) currentNode.getChildAt(0);
+            DefaultMutableTreeNode secondChild = (DefaultMutableTreeNode) currentNode.getChildAt(1);
+            if (Operators.ALL_OPERATORS.contains(firstChild.getUserObject().toString())) {
+                firstOperand = getResult(firstChild);
             } else {
-                firstOperand = Double.valueOf(firstChildr.getUserObject().toString());
+                firstOperand = Double.valueOf(firstChild.getUserObject().toString());
             }
-            if (Operators.ALL_OPERATORS.indexOf(secondChildr.getUserObject().toString()) > -1) {
-                secondOperand = getResult(secondChildr);
+            if (Operators.ALL_OPERATORS.contains(secondChild.getUserObject().toString())) {
+                secondOperand = getResult(secondChild);
             } else {
-                secondOperand = Double.valueOf(secondChildr.getUserObject().toString());
+                secondOperand = Double.valueOf(secondChild.getUserObject().toString());
             }
             switch (currentNode.getUserObject().toString().charAt(0)) {
                 case Operators.PLUS:
@@ -474,36 +474,36 @@ public class MainFrame {
         }
     }
 
-    private String getExpression(DefaultMutableTreeNode currentNode){
+    private String getExpression(DefaultMutableTreeNode currentNode) {
         String firstOperand = "";
         String secondOperand = "";
         if (currentNode.isLeaf()) return currentNode.getUserObject().toString();
         else {
-            DefaultMutableTreeNode firstChildr = (DefaultMutableTreeNode) currentNode.getChildAt(0);
-            DefaultMutableTreeNode secondChildr = (DefaultMutableTreeNode) currentNode.getChildAt(1);
-            if (Operators.ALL_OPERATORS.indexOf(firstChildr.getUserObject().toString()) > -1) {
-                firstOperand = getExpression(firstChildr);
+            DefaultMutableTreeNode firstChild = (DefaultMutableTreeNode) currentNode.getChildAt(0);
+            DefaultMutableTreeNode secondChild = (DefaultMutableTreeNode) currentNode.getChildAt(1);
+            if (Operators.ALL_OPERATORS.contains(firstChild.getUserObject().toString())) {
+                firstOperand = getExpression(firstChild);
             } else {
-                firstOperand = (firstChildr.getUserObject().toString());
+                firstOperand = (firstChild.getUserObject().toString());
             }
-            if (Operators.ALL_OPERATORS.indexOf(secondChildr.getUserObject().toString()) > -1) {
-                secondOperand = getExpression(secondChildr);
+            if (Operators.ALL_OPERATORS.contains(secondChild.getUserObject().toString())) {
+                secondOperand = getExpression(secondChild);
             } else {
-                secondOperand = (secondChildr.getUserObject().toString());
+                secondOperand = (secondChild.getUserObject().toString());
             }
             switch (currentNode.getUserObject().toString().charAt(0)) {
                 case Operators.PLUS:
-                    return "(" + firstOperand +"+"+ secondOperand + ")";
+                    return "(" + firstOperand + "+" + secondOperand + ")";
                 case Operators.MINUS:
-                    return "(" + firstOperand +"-"+ secondOperand + ")";
+                    return "(" + firstOperand + "-" + secondOperand + ")";
                 case Operators.MULTIPLY:
-                    return "(" + firstOperand +"*"+ secondOperand + ")";
+                    return "(" + firstOperand + "*" + secondOperand + ")";
                 case Operators.DIVIDE:
-                    return "(" + firstOperand +"/"+ secondOperand + ")";
+                    return "(" + firstOperand + "/" + secondOperand + ")";
                 case Operators.MOD:
-                    return "(" + firstOperand +"%"+ secondOperand + ")";
+                    return "(" + firstOperand + "%" + secondOperand + ")";
                 case Operators.DEGREE:
-                    return "(" + firstOperand+"^"+ secondOperand + ")";
+                    return "(" + firstOperand + "^" + secondOperand + ")";
                 default:
                     System.out.println("Oops");
                     return "";
