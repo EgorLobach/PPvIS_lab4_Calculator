@@ -6,8 +6,6 @@ import model.Operators;
 import javax.swing.*;
 import javax.swing.event.TreeExpansionEvent;
 import javax.swing.event.TreeExpansionListener;
-import javax.swing.event.TreeSelectionEvent;
-import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -407,7 +405,6 @@ public class MainFrame {
                                 String.valueOf(getResult((DefaultMutableTreeNode) event.getPath().getLastPathComponent())),
                                 getExpression((DefaultMutableTreeNode) event.getPath().getLastPathComponent())));
                     }
-
                     public void treeCollapsed(TreeExpansionEvent event) {
                         if (!expression.getText().contains(getExpression((DefaultMutableTreeNode) event.getPath().getLastPathComponent()))) {
                             expression.setText(result.replace(
