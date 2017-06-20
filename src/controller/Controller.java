@@ -70,11 +70,12 @@ public class Controller {
         } else {
             if (node.getRight().getOperator()!='0') {
                 if (!deploy(node.getRight()) && node.getLeft().getOperator() != '0') {
-                    deploy(node.getLeft());
+                    return deploy(node.getLeft());
                 }
             }
-            else if (node.getLeft().getOperator() != '0')
-                deploy(node.getLeft());
+            else if (node.getLeft().getOperator() != '0'){
+                return deploy(node.getLeft());
+            }
             return false;
         }
     }
