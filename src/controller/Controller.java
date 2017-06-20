@@ -17,12 +17,14 @@ public class Controller {
     }
     public String startCalc(String inputString){
         node = dataBase.buildNodes(inputString);
-        return String.valueOf(dataBase.eval(inputString));
+        return node.getValue();
     }
 
     public DefaultMutableTreeNode buildTree(){
         DefaultMutableTreeNode root = new DefaultMutableTreeNode();
-        root.setUserObject(node.getValue());
+        if (node.isLeaf())
+            root.setUserObject(node.getValue());
+        else root.setUserObject(node.getOperator());
         if (node.getLeft()!= null&&node.getRight()!=null)
             DFS(node, root);
         return root;
@@ -31,14 +33,14 @@ public class Controller {
     private void DFS(Node node, DefaultMutableTreeNode root) {
         List<Node> adjacentNodes = node.getAdjacentNodes();
         for (Node adjacentNode : adjacentNodes){
-            if(adjacentNode.getLeft()!=null && adjacentNode.getRight()!=null){
+            if(adjacentNode.isLeaf()){
                 DefaultMutableTreeNode adjacentNodeView = new DefaultMutableTreeNode(adjacentNode.getValue());
                 root.add(adjacentNodeView);
-                DFS(adjacentNode,adjacentNodeView);
             }
             else {
-                DefaultMutableTreeNode adjacentNodeView = new DefaultMutableTreeNode(adjacentNode.getValue());
+                DefaultMutableTreeNode adjacentNodeView = new DefaultMutableTreeNode(adjacentNode.getOperator());
                 root.add(adjacentNodeView);
+                DFS(adjacentNode,adjacentNodeView);
             }
         }
     }

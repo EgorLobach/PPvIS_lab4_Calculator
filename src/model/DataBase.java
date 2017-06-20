@@ -41,73 +41,37 @@ public class DataBase {
         }
     }
 
-    void letGo(LinkedList<Double> st, char operator) {
-        double someOne = st.removeLast();
-        double someTwo = st.removeLast();
+    private void hangUp(LinkedList<Character> someOperators, LinkedList<Node> someNode){
+        Node node = new Node(someOperators.removeLast());
+        Node someRight = someNode.removeLast();
+        Node someLeft = someNode.removeLast();
+        node.setRight(someRight);
+        node.setLeft(someLeft);
+        double dRight = Double.parseDouble(someRight.getValue());
+        double dLeft = Double.parseDouble(someLeft.getValue());
+        char operator = node.getOperator();
         switch (operator) {
             case Operators.PLUS:
-                st.add(someTwo + someOne);
+                node.setValue(String.valueOf(dRight+dLeft));
                 break;
             case Operators.MINUS:
-                st.add(someTwo - someOne);
+                node.setValue(String.valueOf(dRight-dLeft));
                 break;
             case Operators.MULTIPLY:
-                st.add(someTwo * someOne);
+                node.setValue(String.valueOf(dRight*dLeft));
                 break;
             case Operators.DIVIDE:
-                st.add(someTwo / someOne);
+                node.setValue(String.valueOf(dRight/dLeft));
                 break;
             case Operators.MOD:
-                st.add(someTwo%someOne);
+                node.setValue(String.valueOf(dRight%dLeft));
                 break;
             case Operators.DEGREE:
-                st.add(Math.pow(someTwo, someOne));
+                node.setValue(String.valueOf(Math.pow(dRight, dLeft)));
                 break;
             default:
                 System.out.println("Oops");
         }
-    }
-
-    public double eval(String inputString) {
-        inputString=optimizeInputString(inputString);
-        LinkedList<Double> someNumbers = new LinkedList<>();
-        LinkedList<Character> someOperators = new LinkedList<>();
-        for (int i = 0; i < inputString.length(); i++) {
-            char symbol = inputString.charAt(i);
-            if (symbol == '(') {
-                someOperators.add('(');
-            } else if (symbol == ')') {
-                while (someOperators.getLast() != '(') {
-                    letGo(someNumbers, someOperators.removeLast());
-                }
-                someOperators.removeLast();
-            } else if (isOperator(symbol)) {
-                while (!someOperators.isEmpty() &&
-                        priority(someOperators.getLast()) >= priority(symbol)) {
-                    letGo(someNumbers, someOperators.removeLast());
-
-                }
-                someOperators.add(symbol);
-            } else {
-                String operand = "";
-                while (i < inputString.length() &&
-                        (Character.isDigit(inputString.charAt(i)) || inputString.charAt(i) == '.')) {
-                    operand += inputString.charAt(i++);
-                }
-                --i;
-                someNumbers.add(Double.parseDouble(operand));
-            }
-        }
-        while (!someOperators.isEmpty()) {
-            letGo(someNumbers, someOperators.removeLast());
-        }
-        return someNumbers.get(0);
-    }
-
-    private void hangUp(LinkedList<Character> someOperators, LinkedList<Node> someNode){
-        Node node = new Node(someOperators.removeLast());
-        node.setRight(someNode.removeLast());
-        node.setLeft(someNode.removeLast());
         someNode.add(node);
     }
 

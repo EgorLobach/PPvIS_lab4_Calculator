@@ -52,6 +52,9 @@ public class MainFrame {
     private int countBrackets = 0;
 
     private JPanel treePanel = new JPanel();
+    private JPanel controllingExpressionPanel = new JPanel();
+    private JButton clotting = new JButton("<");
+    private JButton deployment = new JButton(">");
     private JScrollPane scrollPane;
     private JTree tree;
 
@@ -111,7 +114,14 @@ public class MainFrame {
         scrollPane.setPreferredSize(new Dimension(200, 500));
         treePanel.add(expression, BorderLayout.NORTH);
         treePanel.add(scrollPane, BorderLayout.CENTER);
+        controllingExpressionAction();
+        controllingExpressionPanel.add(clotting);
+        controllingExpressionPanel.add(deployment);
+        treePanel.add(controllingExpressionPanel, BorderLayout.SOUTH);
         return treePanel;
+    }
+
+    private void controllingExpressionAction() {
     }
 
     private void buttonAction() {

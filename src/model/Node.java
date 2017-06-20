@@ -8,15 +8,24 @@ import java.util.List;
  */
 public class Node {
     private String value;
+    private char operator;
     private Node left;
     private Node right;
+    private boolean leaf;
 
     public Node(Character character) {
-        this.value= String.valueOf(character);
+        this.operator= character;
+        this.leaf=false;
     }
 
     public Node(String operand) {
         this.value=operand;
+        this.leaf=true;
+        this.operator='0';
+    }
+
+    public boolean isLeaf() {
+        return leaf;
     }
 
     public String getValue() {
@@ -39,6 +48,17 @@ public class Node {
         return right;
     }
 
+    public void setValue(String value) {
+        this.value = value;
+    }
+
+    public char getOperator() {
+        return operator;
+    }
+
+    public void setLeaf(boolean leaf) {
+        this.leaf = leaf;
+    }
 
     public List<Node> getAdjacentNodes() {
         List<Node> nodeList = new LinkedList<>();
