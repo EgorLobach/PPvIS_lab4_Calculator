@@ -14,14 +14,14 @@ public class Node {
     private boolean leaf;
 
     public Node(Character character) {
-        this.operator= character;
-        this.leaf=false;
+        this.operator = character;
+        this.leaf = false;
     }
 
     public Node(String operand) {
-        this.value=operand;
-        this.leaf=true;
-        this.operator='0';
+        this.value = operand;
+        this.leaf = true;
+        this.operator = '0';
     }
 
     public boolean isLeaf() {

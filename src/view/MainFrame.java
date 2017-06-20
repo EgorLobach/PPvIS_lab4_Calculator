@@ -410,22 +410,23 @@ public class MainFrame {
 
     private void treeAction() {
         tree.addTreeExpansionListener(new TreeExpansionListener() {
-                    public void treeExpanded(TreeExpansionEvent event) {
-                        expression.setText(expression.getText().replace(
-                                String.valueOf(getResult((DefaultMutableTreeNode) event.getPath().getLastPathComponent())),
-                                getExpression((DefaultMutableTreeNode) event.getPath().getLastPathComponent())));
-                    }
-                    public void treeCollapsed(TreeExpansionEvent event) {
-                        if (!expression.getText().contains(getExpression((DefaultMutableTreeNode) event.getPath().getLastPathComponent()))) {
-                            expression.setText(result.replace(
-                                    getExpression((DefaultMutableTreeNode) event.getPath().getLastPathComponent()),
-                                    String.valueOf(getResult((DefaultMutableTreeNode) event.getPath().getLastPathComponent()))));
-                        } else
-                            expression.setText(expression.getText().replace(
-                                    getExpression((DefaultMutableTreeNode) event.getPath().getLastPathComponent()),
-                                    String.valueOf(getResult((DefaultMutableTreeNode) event.getPath().getLastPathComponent()))));
-                    }
-                }
+                                          public void treeExpanded(TreeExpansionEvent event) {
+                                              expression.setText(expression.getText().replace(
+                                                      String.valueOf(getResult((DefaultMutableTreeNode) event.getPath().getLastPathComponent())),
+                                                      getExpression((DefaultMutableTreeNode) event.getPath().getLastPathComponent())));
+                                          }
+
+                                          public void treeCollapsed(TreeExpansionEvent event) {
+                                              if (!expression.getText().contains(getExpression((DefaultMutableTreeNode) event.getPath().getLastPathComponent()))) {
+                                                  expression.setText(result.replace(
+                                                          getExpression((DefaultMutableTreeNode) event.getPath().getLastPathComponent()),
+                                                          String.valueOf(getResult((DefaultMutableTreeNode) event.getPath().getLastPathComponent()))));
+                                              } else
+                                                  expression.setText(expression.getText().replace(
+                                                          getExpression((DefaultMutableTreeNode) event.getPath().getLastPathComponent()),
+                                                          String.valueOf(getResult((DefaultMutableTreeNode) event.getPath().getLastPathComponent()))));
+                                          }
+                                      }
         );
     }
 

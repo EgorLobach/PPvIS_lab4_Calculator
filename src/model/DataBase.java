@@ -9,39 +9,40 @@ public class DataBase {
     private boolean isOperator(char symbol) {
         return symbol == '+' || symbol == '-' || symbol == '*' || symbol == '/' || symbol == '%' || symbol == '^';
     }
-    private String optimizeInputString(String inputString){
+
+    private String optimizeInputString(String inputString) {
         inputString = inputString.replace(" ", "").replace("(-", "(0-");
         if (inputString.charAt(0) == '-') {
             inputString = "0" + inputString;
         }
-        while (inputString.indexOf("sqrt")>-1){
+        while (inputString.indexOf("sqrt") > -1) {
             int temp = 1;
-            for (int i = inputString.indexOf("sqrt")+5; i<inputString.length();i++){
+            for (int i = inputString.indexOf("sqrt") + 5; i < inputString.length(); i++) {
                 if (inputString.charAt(i) == '(') temp++;
                 if (inputString.charAt(i) == ')') temp--;
-                if (temp==0) {
-                    inputString = inputString.substring(0, i+1)+"^0.5"+inputString.substring(i+1);
+                if (temp == 0) {
+                    inputString = inputString.substring(0, i + 1) + "^0.5" + inputString.substring(i + 1);
                     break;
                 }
             }
-            inputString = inputString.substring(0, inputString.indexOf("sqrt"))+ inputString.substring(inputString.indexOf("sqrt")+4);
+            inputString = inputString.substring(0, inputString.indexOf("sqrt")) + inputString.substring(inputString.indexOf("sqrt") + 4);
         }
         return inputString;
     }
 
     int priority(char operator) {
-        if (operator == '^')
+        if (operator == Operators.DEGREE)
             return 2;
-        else if (operator == '*' || operator == '/' || operator == '%') {
+        else if (operator == Operators.MULTIPLY || operator == Operators.DIVIDE || operator == Operators.MOD) {
             return 1;
-        } else if (operator == '+' || operator == '-') {
+        } else if (operator == Operators.PLUS || operator == Operators.MINUS) {
             return 0;
         } else {
             return -1;
         }
     }
 
-    private void hangUp(LinkedList<Character> someOperators, LinkedList<Node> someNode){
+    private void hangUp(LinkedList<Character> someOperators, LinkedList<Node> someNode) {
         Node node = new Node(someOperators.removeLast());
         Node someRight = someNode.removeLast();
         Node someLeft = someNode.removeLast();
@@ -52,19 +53,19 @@ public class DataBase {
         char operator = node.getOperator();
         switch (operator) {
             case Operators.PLUS:
-                node.setValue(String.valueOf(dRight+dLeft));
+                node.setValue(String.valueOf(dRight + dLeft));
                 break;
             case Operators.MINUS:
-                node.setValue(String.valueOf(dRight-dLeft));
+                node.setValue(String.valueOf(dRight - dLeft));
                 break;
             case Operators.MULTIPLY:
-                node.setValue(String.valueOf(dRight*dLeft));
+                node.setValue(String.valueOf(dRight * dLeft));
                 break;
             case Operators.DIVIDE:
-                node.setValue(String.valueOf(dRight/dLeft));
+                node.setValue(String.valueOf(dRight / dLeft));
                 break;
             case Operators.MOD:
-                node.setValue(String.valueOf(dRight%dLeft));
+                node.setValue(String.valueOf(dRight % dLeft));
                 break;
             case Operators.DEGREE:
                 node.setValue(String.valueOf(Math.pow(dRight, dLeft)));
