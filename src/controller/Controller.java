@@ -27,7 +27,7 @@ public class Controller {
         if (node.isLeaf())
             root.setUserObject(node.getValue());
         else root.setUserObject(node.getOperator());
-        if (node.getLeft() != null && node.getRight() != null)
+        if (!node.isLeaf())
             DFS(node, root);
         return root;
     }
@@ -43,6 +43,39 @@ public class Controller {
                 root.add(adjacentNodeView);
                 DFS(adjacentNode, adjacentNodeView);
             }
+        }
+    }
+
+    public void collapseTree() {
+        collapse(node);
+    }
+
+    public void deployTree() {
+        deploy(node);
+    }
+
+    private void collapse(Node node) {
+        if (node.getRight().isLeaf() && node.getLeft().isLeaf()) {
+            node.setLeaf(true);
+        } else {
+            if (!node.getLeft().isLeaf()) collapse(node.getLeft());
+            else if (!node.getRight().isLeaf()) collapse(node.getRight());
+        }
+    }
+
+    private boolean deploy(Node node) {
+        if (node.isLeaf() && node.getOperator()!='0') {
+            node.setLeaf(false);
+            return true;
+        } else {
+            if (node.getRight().getOperator()!='0') {
+                if (!deploy(node.getRight()) && node.getLeft().getOperator() != '0') {
+                    deploy(node.getLeft());
+                }
+            }
+            else if (node.getLeft().getOperator() != '0')
+                deploy(node.getLeft());
+            return false;
         }
     }
 }

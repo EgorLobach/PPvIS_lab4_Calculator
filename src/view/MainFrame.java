@@ -53,8 +53,8 @@ public class MainFrame {
 
     private JPanel treePanel = new JPanel();
     private JPanel controllingExpressionPanel = new JPanel();
-    private JButton clotting = new JButton("<");
-    private JButton deployment = new JButton(">");
+    private JButton clottingButton = new JButton("<");
+    private JButton deploymentButton = new JButton(">");
     private JScrollPane scrollPane;
     private JTree tree;
 
@@ -68,12 +68,14 @@ public class MainFrame {
         expression.setFont(new Font("Expression", Font.ITALIC, 20));
         buttonXSquared.setEnabled(false);
         buttonXDegreeY.setEnabled(false);
+        clottingButton.setEnabled(false);
+        deploymentButton.setEnabled(false);
         treePanel.setLayout(new BorderLayout());
     }
 
     public void initMainFrame() {
 
-
+        controllingExpressionAction();
         buttonAction();
         buttonPanel.add(button1);
         buttonPanel.add(button2);
@@ -114,14 +116,41 @@ public class MainFrame {
         scrollPane.setPreferredSize(new Dimension(200, 500));
         treePanel.add(expression, BorderLayout.NORTH);
         treePanel.add(scrollPane, BorderLayout.CENTER);
-        controllingExpressionAction();
-        controllingExpressionPanel.add(clotting);
-        controllingExpressionPanel.add(deployment);
+        controllingExpressionPanel.add(clottingButton);
+        controllingExpressionPanel.add(deploymentButton);
         treePanel.add(controllingExpressionPanel, BorderLayout.SOUTH);
         return treePanel;
     }
 
     private void controllingExpressionAction() {
+        clottingButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                controller.collapseTree();
+                treePanel.removeAll();
+                tree = new JTree(controller.buildTree());
+                for (int i = 0; i < tree.getRowCount(); i++) tree.expandRow(i);
+                result = getExpression((DefaultMutableTreeNode) tree.getPathForRow(0).getLastPathComponent());
+                expression.setText(result);
+                headFrame.add(initTreePanel(), BorderLayout.WEST);
+                headFrame.validate();
+                headFrame.repaint();
+            }
+        });
+        deploymentButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                controller.deployTree();
+                treePanel.removeAll();
+                tree = new JTree(controller.buildTree());
+                for (int i = 0; i < tree.getRowCount(); i++) tree.expandRow(i);
+                result = getExpression((DefaultMutableTreeNode) tree.getPathForRow(0).getLastPathComponent());
+                expression.setText(result);
+                headFrame.add(initTreePanel(), BorderLayout.WEST);
+                headFrame.validate();
+                headFrame.repaint();
+            }
+        });
     }
 
     private void buttonAction() {
@@ -136,10 +165,11 @@ public class MainFrame {
                     for (int i = 0; i < tree.getRowCount(); i++) tree.expandRow(i);
                     result = getExpression((DefaultMutableTreeNode) tree.getPathForRow(0).getLastPathComponent());
                     expression.setText(result);
-                    treeAction();
                     headFrame.add(initTreePanel(), BorderLayout.WEST);
                     headFrame.validate();
                     headFrame.repaint();
+                    clottingButton.setEnabled(true);
+                    deploymentButton.setEnabled(true);
                 }
             }
         });
@@ -408,28 +438,6 @@ public class MainFrame {
         });
     }
 
-    private void treeAction() {
-        tree.addTreeExpansionListener(new TreeExpansionListener() {
-                                          public void treeExpanded(TreeExpansionEvent event) {
-                                              expression.setText(expression.getText().replace(
-                                                      String.valueOf(getResult((DefaultMutableTreeNode) event.getPath().getLastPathComponent())),
-                                                      getExpression((DefaultMutableTreeNode) event.getPath().getLastPathComponent())));
-                                          }
-
-                                          public void treeCollapsed(TreeExpansionEvent event) {
-                                              if (!expression.getText().contains(getExpression((DefaultMutableTreeNode) event.getPath().getLastPathComponent()))) {
-                                                  expression.setText(result.replace(
-                                                          getExpression((DefaultMutableTreeNode) event.getPath().getLastPathComponent()),
-                                                          String.valueOf(getResult((DefaultMutableTreeNode) event.getPath().getLastPathComponent()))));
-                                              } else
-                                                  expression.setText(expression.getText().replace(
-                                                          getExpression((DefaultMutableTreeNode) event.getPath().getLastPathComponent()),
-                                                          String.valueOf(getResult((DefaultMutableTreeNode) event.getPath().getLastPathComponent()))));
-                                          }
-                                      }
-        );
-    }
-
     private boolean isAddZero() {
         if (scoreboard.getText().length() > 1) {
             String temp = scoreboard.getText().substring(scoreboard.getText().length() - 2, scoreboard.getText().length());
@@ -444,43 +452,6 @@ public class MainFrame {
             return (temp.equals("+") || temp.equals("-") || temp.equals("*") || temp.equals("/") ||
                     temp.equals("(") || temp.equals("%") || temp.equals("^"));
         } else return false;
-    }
-
-    private double getResult(DefaultMutableTreeNode currentNode) {
-        Double firstOperand = 0.0;
-        Double secondOperand = 0.0;
-        if (currentNode.isLeaf()) return Double.valueOf(currentNode.getUserObject().toString());
-        else {
-            DefaultMutableTreeNode firstChild = (DefaultMutableTreeNode) currentNode.getChildAt(0);
-            DefaultMutableTreeNode secondChild = (DefaultMutableTreeNode) currentNode.getChildAt(1);
-            if (Operators.ALL_OPERATORS.contains(firstChild.getUserObject().toString())) {
-                firstOperand = getResult(firstChild);
-            } else {
-                firstOperand = Double.valueOf(firstChild.getUserObject().toString());
-            }
-            if (Operators.ALL_OPERATORS.contains(secondChild.getUserObject().toString())) {
-                secondOperand = getResult(secondChild);
-            } else {
-                secondOperand = Double.valueOf(secondChild.getUserObject().toString());
-            }
-            switch (currentNode.getUserObject().toString().charAt(0)) {
-                case Operators.PLUS:
-                    return firstOperand + secondOperand;
-                case Operators.MINUS:
-                    return firstOperand - secondOperand;
-                case Operators.MULTIPLY:
-                    return firstOperand * secondOperand;
-                case Operators.DIVIDE:
-                    return firstOperand / secondOperand;
-                case Operators.MOD:
-                    return firstOperand % secondOperand;
-                case Operators.DEGREE:
-                    return Math.pow(firstOperand, secondOperand);
-                default:
-                    System.out.println("Oops");
-                    return 0;
-            }
-        }
     }
 
     private String getExpression(DefaultMutableTreeNode currentNode) {

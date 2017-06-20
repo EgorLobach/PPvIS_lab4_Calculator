@@ -53,22 +53,22 @@ public class DataBase {
         char operator = node.getOperator();
         switch (operator) {
             case Operators.PLUS:
-                node.setValue(String.valueOf(dRight + dLeft));
+                node.setValue(String.valueOf(dLeft + dRight));
                 break;
             case Operators.MINUS:
-                node.setValue(String.valueOf(dRight - dLeft));
+                node.setValue(String.valueOf(dLeft - dRight));
                 break;
             case Operators.MULTIPLY:
-                node.setValue(String.valueOf(dRight * dLeft));
+                node.setValue(String.valueOf(dLeft * dRight));
                 break;
             case Operators.DIVIDE:
-                node.setValue(String.valueOf(dRight / dLeft));
+                node.setValue(String.valueOf(dLeft / dRight));
                 break;
             case Operators.MOD:
-                node.setValue(String.valueOf(dRight % dLeft));
+                node.setValue(String.valueOf(dLeft % dRight));
                 break;
             case Operators.DEGREE:
-                node.setValue(String.valueOf(Math.pow(dRight, dLeft)));
+                node.setValue(String.valueOf(Math.pow(dLeft, dRight)));
                 break;
             default:
                 System.out.println("Oops");
