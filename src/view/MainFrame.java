@@ -6,7 +6,8 @@ import model.Operators;
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 
 /**
  * Created by anonymous on 05.06.2017.
@@ -153,23 +154,7 @@ public class MainFrame {
     }
 
     private void buttonAction() {
-        buttonStart.addActionListener(e -> {
-            if (!scoreboard.getText().isEmpty() && countBrackets == 0) {
-                scoreboard.setText(controller.startCalc(scoreboard.getText()));
-                dot = true;
-                treePanel.removeAll();
-                tree = new JTree(controller.buildTree());
-                for (int i = 0; i < tree.getRowCount(); i++) tree.expandRow(i);
-                result = getExpression((DefaultMutableTreeNode) tree.getPathForRow(0).getLastPathComponent());
-                expression.setText(result);
-                headFrame.add(initTreePanel(), BorderLayout.WEST);
-                headFrame.validate();
-                headFrame.repaint();
-                clottingButton.setEnabled(true);
-                deploymentButton.setEnabled(true);
-                scoreboard.requestFocusInWindow();
-            }
-        });
+        buttonStart.addActionListener(e -> actionStart());
         buttonDegree.addActionListener(e -> {
             buttonXSquared.setEnabled(!buttonXSquared.isEnabled());
             buttonXDegreeY.setEnabled(!buttonXDegreeY.isEnabled());
@@ -284,6 +269,9 @@ public class MainFrame {
                 if (e.getKeyCode() == KeyEvent.VK_6 && e.isShiftDown()) {
                     actionOperator("^");
                 }
+                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                    actionStart();
+                }
             }
 
             @Override
@@ -291,6 +279,24 @@ public class MainFrame {
 
             }
         });
+    }
+
+    private void actionStart() {
+        if (!scoreboard.getText().isEmpty() && countBrackets == 0) {
+            scoreboard.setText(controller.startCalc(scoreboard.getText()));
+            dot = true;
+            treePanel.removeAll();
+            tree = new JTree(controller.buildTree());
+            for (int i = 0; i < tree.getRowCount(); i++) tree.expandRow(i);
+            result = getExpression((DefaultMutableTreeNode) tree.getPathForRow(0).getLastPathComponent());
+            expression.setText(result);
+            headFrame.add(initTreePanel(), BorderLayout.WEST);
+            headFrame.validate();
+            headFrame.repaint();
+            clottingButton.setEnabled(true);
+            deploymentButton.setEnabled(true);
+            scoreboard.requestFocusInWindow();
+        }
     }
 
     private void action0() {
