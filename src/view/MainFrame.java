@@ -6,10 +6,7 @@ import model.Operators;
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
+import java.awt.event.*;
 
 /**
  * Created by anonymous on 05.06.2017.
@@ -114,6 +111,7 @@ public class MainFrame {
         headFrame.add(calculatingPanel, BorderLayout.CENTER);
         headFrame.add(initTreePanel(), BorderLayout.WEST);
         headFrame.setVisible(true);
+        scoreboard.requestFocusInWindow();
     }
 
     private JPanel initTreePanel() {
@@ -138,6 +136,7 @@ public class MainFrame {
             headFrame.add(initTreePanel(), BorderLayout.WEST);
             headFrame.validate();
             headFrame.repaint();
+            scoreboard.requestFocusInWindow();
         });
         deploymentButton.addActionListener(e -> {
             controller.deployTree();
@@ -149,6 +148,7 @@ public class MainFrame {
             headFrame.add(initTreePanel(), BorderLayout.WEST);
             headFrame.validate();
             headFrame.repaint();
+            scoreboard.requestFocusInWindow();
         });
     }
 
@@ -167,11 +167,13 @@ public class MainFrame {
                 headFrame.repaint();
                 clottingButton.setEnabled(true);
                 deploymentButton.setEnabled(true);
+                scoreboard.requestFocusInWindow();
             }
         });
         buttonDegree.addActionListener(e -> {
             buttonXSquared.setEnabled(!buttonXSquared.isEnabled());
             buttonXDegreeY.setEnabled(!buttonXDegreeY.isEnabled());
+            scoreboard.requestFocusInWindow();
         });
         button0.addActionListener(e -> action0());
         button1.addActionListener(e -> actionNumber("1"));
@@ -197,12 +199,14 @@ public class MainFrame {
                 scoreboard.setText(scoreboard.getText() + "sqrt(");
                 countBrackets++;
             }
+            scoreboard.requestFocusInWindow();
         });
         buttonInverse.addActionListener(e -> {
             if (!scoreboard.getText().equals("") && countBrackets == 0 &&
                     scoreboard.getText().charAt(scoreboard.getText().length() - 1) != '.') {
                 scoreboard.setText("1/(" + scoreboard.getText() + ")");
             }
+            scoreboard.requestFocusInWindow();
         });
         buttonXSquared.addActionListener(e -> {
             if (!scoreboard.getText().equals("")) {
@@ -210,6 +214,7 @@ public class MainFrame {
                     scoreboard.setText(scoreboard.getText() + "^2");
                 }
             }
+            scoreboard.requestFocusInWindow();
         });
         buttonXDegreeY.addActionListener(e -> actionXDegreeY());
         scoreboard.addKeyListener(new KeyListener() {
@@ -295,6 +300,7 @@ public class MainFrame {
                 && scoreboard.getText().charAt(scoreboard.getText().length() - 1) != ')') {
             scoreboard.setText(scoreboard.getText() + "0");
         }
+        scoreboard.requestFocusInWindow();
     }
 
     private void actionNumber(String number) {
@@ -303,6 +309,7 @@ public class MainFrame {
         } else if (isAddZero()) {
             scoreboard.setText(scoreboard.getText().substring(0, scoreboard.getText().lastIndexOf("0")) + "9");
         } else scoreboard.setText(scoreboard.getText() + number);
+        scoreboard.requestFocusInWindow();
     }
 
     private void actionDot() {
@@ -312,6 +319,7 @@ public class MainFrame {
                 dot = true;
             }
         }
+        scoreboard.requestFocusInWindow();
     }
 
     private void actionBack() {
@@ -324,6 +332,7 @@ public class MainFrame {
                 countBrackets--;
             scoreboard.setText(scoreboard.getText().substring(0, scoreboard.getText().length() - 1));
         }
+        scoreboard.requestFocusInWindow();
     }
 
     private void actionOperator(String operator) {
@@ -335,6 +344,7 @@ public class MainFrame {
                 }
             }
         }
+        scoreboard.requestFocusInWindow();
     }
 
     private void actionLeft() {
@@ -349,6 +359,7 @@ public class MainFrame {
             dot = false;
             countBrackets++;
         }
+        scoreboard.requestFocusInWindow();
     }
 
     private void actionRight() {
@@ -359,6 +370,7 @@ public class MainFrame {
                 countBrackets--;
             }
         }
+        scoreboard.requestFocusInWindow();
     }
 
     private void actionXDegreeY() {
@@ -367,6 +379,7 @@ public class MainFrame {
                 scoreboard.setText(scoreboard.getText() + "^");
             }
         }
+        scoreboard.requestFocusInWindow();
     }
 
     private boolean isAddZero() {
