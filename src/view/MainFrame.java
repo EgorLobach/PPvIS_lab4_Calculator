@@ -346,52 +346,52 @@ public class MainFrame {
                 if (e.getKeyCode() == KeyEvent.VK_0 && e.isShiftDown()) {
                     actionRight();
                 }
-                if (e.getKeyCode() == KeyEvent.VK_PERIOD||e.getKeyCode()==KeyEvent.VK_DECIMAL) {
+                if (e.getKeyCode() == KeyEvent.VK_PERIOD || e.getKeyCode() == KeyEvent.VK_DECIMAL) {
                     actionDot();
                 }
-                if (e.getKeyCode() == KeyEvent.VK_0 || e.getKeyCode() == KeyEvent.VK_NUMPAD0) {
+                if ((e.getKeyCode() == KeyEvent.VK_0 && !e.isShiftDown()) || e.getKeyCode() == KeyEvent.VK_NUMPAD0) {
                     action0();
                 }
-                if (e.getKeyCode() == KeyEvent.VK_1 || e.getKeyCode() == KeyEvent.VK_NUMPAD1) {
+                if ((e.getKeyCode() == KeyEvent.VK_1 && !e.isShiftDown()) || e.getKeyCode() == KeyEvent.VK_NUMPAD1) {
                     actionNumber("1");
                 }
-                if (e.getKeyCode() == KeyEvent.VK_2 || e.getKeyCode() == KeyEvent.VK_NUMPAD2) {
+                if ((e.getKeyCode() == KeyEvent.VK_2 && !e.isShiftDown()) || e.getKeyCode() == KeyEvent.VK_NUMPAD2) {
                     actionNumber("2");
                 }
-                if (e.getKeyCode() == KeyEvent.VK_3 || e.getKeyCode() == KeyEvent.VK_NUMPAD3) {
+                if ((e.getKeyCode() == KeyEvent.VK_3 && !e.isShiftDown()) || e.getKeyCode() == KeyEvent.VK_NUMPAD3) {
                     actionNumber("3");
                 }
-                if (e.getKeyCode() == KeyEvent.VK_4 || e.getKeyCode() == KeyEvent.VK_NUMPAD4) {
+                if ((e.getKeyCode() == KeyEvent.VK_4 && !e.isShiftDown()) || e.getKeyCode() == KeyEvent.VK_NUMPAD4) {
                     actionNumber("4");
                 }
-                if (e.getKeyCode() == KeyEvent.VK_5 || e.getKeyCode() == KeyEvent.VK_NUMPAD5) {
+                if ((e.getKeyCode() == KeyEvent.VK_5 && !e.isShiftDown()) || e.getKeyCode() == KeyEvent.VK_NUMPAD5) {
                     actionNumber("5");
                 }
-                if (e.getKeyCode() == KeyEvent.VK_6 || e.getKeyCode() == KeyEvent.VK_NUMPAD6) {
+                if ((e.getKeyCode() == KeyEvent.VK_6 && !e.isShiftDown()) || e.getKeyCode() == KeyEvent.VK_NUMPAD6) {
                     actionNumber("6");
                 }
-                if (e.getKeyCode() == KeyEvent.VK_7 || e.getKeyCode() == KeyEvent.VK_NUMPAD7) {
+                if ((e.getKeyCode() == KeyEvent.VK_7 && !e.isShiftDown()) || e.getKeyCode() == KeyEvent.VK_NUMPAD7) {
                     actionNumber("7");
                 }
-                if (e.getKeyCode() == KeyEvent.VK_8 || e.getKeyCode() == KeyEvent.VK_NUMPAD8) {
+                if ((e.getKeyCode() == KeyEvent.VK_8 && !e.isShiftDown()) || e.getKeyCode() == KeyEvent.VK_NUMPAD8) {
                     actionNumber("8");
                 }
-                if (e.getKeyCode() == KeyEvent.VK_9 || e.getKeyCode() == KeyEvent.VK_NUMPAD9) {
+                if ((e.getKeyCode() == KeyEvent.VK_9 && !e.isShiftDown()) || e.getKeyCode() == KeyEvent.VK_NUMPAD9) {
                     actionNumber("9");
                 }
-                if (e.getKeyCode()==KeyEvent.VK_BACK_SPACE){
+                if (e.getKeyCode() == KeyEvent.VK_BACK_SPACE) {
                     actionBack();
                 }
-                if ((e.getKeyCode()==KeyEvent.VK_EQUALS&&e.isShiftDown())||e.getKeyCode()==107){
+                if ((e.getKeyCode() == KeyEvent.VK_EQUALS && e.isShiftDown()) || e.getKeyCode() == 107) {
                     actionOperator("+");
                 }
-                if (e.getKeyCode()==KeyEvent.VK_MINUS||e.getKeyCode()==KeyEvent.VK_SUBTRACT){
+                if (e.getKeyCode() == KeyEvent.VK_MINUS || e.getKeyCode() == KeyEvent.VK_SUBTRACT) {
                     actionOperator("-");
                 }
-                if ((e.getKeyCode()==KeyEvent.VK_8&&e.isShiftDown())||e.getKeyCode()==KeyEvent.VK_MULTIPLY){
+                if ((e.getKeyCode() == KeyEvent.VK_8 && e.isShiftDown()) || e.getKeyCode() == KeyEvent.VK_MULTIPLY) {
                     actionOperator("*");
                 }
-                if (e.getKeyCode()==KeyEvent.VK_SLASH||e.getKeyCode()==KeyEvent.VK_DIVIDE){
+                if (e.getKeyCode() == KeyEvent.VK_SLASH || e.getKeyCode() == KeyEvent.VK_DIVIDE) {
                     actionOperator("/");
                 }
                 if (e.getKeyCode() == KeyEvent.VK_5 && e.isShiftDown()) {
@@ -416,6 +416,7 @@ public class MainFrame {
                 || scoreboard.getText().charAt(scoreboard.getText().length() - 1) == ')') {
         } else scoreboard.setText(scoreboard.getText() + "0");
     }
+
     private void actionNumber(String number) {
         if (scoreboard.getText().equals("0")) {
             scoreboard.setText(number);
@@ -423,7 +424,8 @@ public class MainFrame {
             scoreboard.setText(scoreboard.getText().substring(0, scoreboard.getText().lastIndexOf("0")) + "9");
         } else scoreboard.setText(scoreboard.getText() + number);
     }
-    private void actionDot(){
+
+    private void actionDot() {
         if (scoreboard.getText().equals("")) {
         } else if (isOperation() || scoreboard.getText().charAt(scoreboard.getText().length() - 1) == ')') {
         } else if (!dot) {
@@ -431,7 +433,8 @@ public class MainFrame {
             dot = true;
         }
     }
-    private void actionBack(){
+
+    private void actionBack() {
         if (!scoreboard.getText().equals("")) {
             if (scoreboard.getText().charAt(scoreboard.getText().length() - 1) == '.')
                 dot = false;
@@ -442,7 +445,8 @@ public class MainFrame {
             scoreboard.setText(scoreboard.getText().substring(0, scoreboard.getText().length() - 1));
         }
     }
-    private void actionOperator(String operator){
+
+    private void actionOperator(String operator) {
         if (!scoreboard.getText().equals("")) {
             if (!isOperation() || scoreboard.getText().charAt(scoreboard.getText().length() - 1) == ')') {
                 if (scoreboard.getText().charAt(scoreboard.getText().length() - 1) != '.') {
@@ -452,7 +456,8 @@ public class MainFrame {
             }
         }
     }
-    private void actionLeft(){
+
+    private void actionLeft() {
         if (scoreboard.getText().length() > 0) {
             if (isOperation() && scoreboard.getText().charAt(scoreboard.getText().length() - 1) != ')') {
                 scoreboard.setText(scoreboard.getText() + "(");
@@ -465,7 +470,8 @@ public class MainFrame {
             countBrackets++;
         }
     }
-    private void actionRight(){
+
+    private void actionRight() {
         if (countBrackets > 0) {
             if (scoreboard.getText().charAt(scoreboard.getText().length() - 1) != '.' && !isOperation()) {
                 scoreboard.setText(scoreboard.getText() + ")");
@@ -474,7 +480,8 @@ public class MainFrame {
             }
         }
     }
-    private void actionXDegreeY(){
+
+    private void actionXDegreeY() {
         if (!scoreboard.getText().equals("")) {
             if (!isOperation()) {
                 scoreboard.setText(scoreboard.getText() + "^");
