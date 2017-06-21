@@ -4,12 +4,12 @@ import controller.Controller;
 import model.Operators;
 
 import javax.swing.*;
-import javax.swing.event.TreeExpansionEvent;
-import javax.swing.event.TreeExpansionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 
 /**
  * Created by anonymous on 05.06.2017.
@@ -55,7 +55,6 @@ public class MainFrame {
     private JPanel controllingExpressionPanel = new JPanel();
     private JButton clottingButton = new JButton("<");
     private JButton deploymentButton = new JButton(">");
-    private JScrollPane scrollPane;
     private JTree tree;
 
     public MainFrame(String frame, Dimension dimension, Controller controller) {
@@ -65,7 +64,13 @@ public class MainFrame {
         headFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         headFrame.setLayout(new BorderLayout());
         scoreboard.setFont(new Font("Scoreboard", Font.ITALIC, 30));
+        scoreboard.setEditable(false);
+        scoreboard.setBackground(Color.WHITE);
+        scoreboard.setBorder(BorderFactory.createLineBorder(Color.BLACK));
         expression.setFont(new Font("Expression", Font.ITALIC, 20));
+        expression.setEditable(false);
+        expression.setBackground(Color.WHITE);
+        expression.setBorder(BorderFactory.createLineBorder(Color.BLACK));
         buttonXSquared.setEnabled(false);
         buttonXDegreeY.setEnabled(false);
         clottingButton.setEnabled(false);
@@ -112,7 +117,7 @@ public class MainFrame {
     }
 
     private JPanel initTreePanel() {
-        scrollPane = new JScrollPane(tree);
+        JScrollPane scrollPane = new JScrollPane(tree);
         scrollPane.setPreferredSize(new Dimension(200, 500));
         treePanel.add(expression, BorderLayout.NORTH);
         treePanel.add(scrollPane, BorderLayout.CENTER);
@@ -183,219 +188,115 @@ public class MainFrame {
         button0.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (scoreboard.getText().length() == 0)
-                    scoreboard.setText("0");
-                else if (scoreboard.getText().equals("0") || isAddZero()
-                        || scoreboard.getText().charAt(scoreboard.getText().length() - 1) == ')') {
-                } else scoreboard.setText(scoreboard.getText() + "0");
+                action0();
             }
         });
         button1.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (scoreboard.getText().equals("0")) {
-                    scoreboard.setText("1");
-                } else if (isAddZero()) {
-                    scoreboard.setText(scoreboard.getText().substring(0, scoreboard.getText().lastIndexOf("0")) + "1");
-                } else scoreboard.setText(scoreboard.getText() + "1");
+                actionNumber("1");
             }
         });
         button2.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (scoreboard.getText().equals("0")) {
-                    scoreboard.setText("2");
-                } else if (isAddZero()) {
-                    scoreboard.setText(scoreboard.getText().substring(0, scoreboard.getText().lastIndexOf("0")) + "2");
-                } else scoreboard.setText(scoreboard.getText() + "2");
+                actionNumber("2");
             }
         });
         button3.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (scoreboard.getText().equals("0")) {
-                    scoreboard.setText("3");
-                } else if (isAddZero()) {
-                    scoreboard.setText(scoreboard.getText().substring(0, scoreboard.getText().lastIndexOf("0")) + "3");
-                } else scoreboard.setText(scoreboard.getText() + "3");
+                actionNumber("3");
             }
         });
         button4.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (scoreboard.getText().equals("0")) {
-                    scoreboard.setText("4");
-                } else if (isAddZero()) {
-                    scoreboard.setText(scoreboard.getText().substring(0, scoreboard.getText().lastIndexOf("0")) + "4");
-                } else scoreboard.setText(scoreboard.getText() + "4");
+                actionNumber("4");
             }
         });
         button5.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (scoreboard.getText().equals("0")) {
-                    scoreboard.setText("5");
-                } else if (isAddZero()) {
-                    scoreboard.setText(scoreboard.getText().substring(0, scoreboard.getText().lastIndexOf("0")) + "5");
-                } else scoreboard.setText(scoreboard.getText() + "5");
+                actionNumber("5");
             }
         });
         button6.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (scoreboard.getText().equals("0")) {
-                    scoreboard.setText("6");
-                } else if (isAddZero()) {
-                    scoreboard.setText(scoreboard.getText().substring(0, scoreboard.getText().lastIndexOf("0")) + "6");
-                } else scoreboard.setText(scoreboard.getText() + "6");
+                actionNumber("6");
             }
         });
         button7.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (scoreboard.getText().equals("0")) {
-                    scoreboard.setText("7");
-                } else if (isAddZero()) {
-                    scoreboard.setText(scoreboard.getText().substring(0, scoreboard.getText().lastIndexOf("0")) + "7");
-                } else scoreboard.setText(scoreboard.getText() + "7");
+                actionNumber("7");
             }
         });
         button8.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (scoreboard.getText().equals("0")) {
-                    scoreboard.setText("8");
-                } else if (isAddZero()) {
-                    scoreboard.setText(scoreboard.getText().substring(0, scoreboard.getText().lastIndexOf("0")) + "8");
-                } else scoreboard.setText(scoreboard.getText() + "8");
+                actionNumber("8");
             }
         });
         button9.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (scoreboard.getText().equals("0")) {
-                    scoreboard.setText("9");
-                } else if (isAddZero()) {
-                    scoreboard.setText(scoreboard.getText().substring(0, scoreboard.getText().lastIndexOf("0")) + "9");
-                } else scoreboard.setText(scoreboard.getText() + "9");
+                actionNumber("9");
             }
         });
         buttonDot.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (scoreboard.getText().equals("")) {
-                } else if (isOperation() || scoreboard.getText().charAt(scoreboard.getText().length() - 1) == ')') {
-                } else if (!dot) {
-                    scoreboard.setText(scoreboard.getText() + ".");
-                    dot = true;
-                }
+                actionDot();
             }
         });
         buttonBack.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (!scoreboard.getText().equals("")) {
-                    if (scoreboard.getText().charAt(scoreboard.getText().length() - 1) == '.')
-                        dot = false;
-                    if (scoreboard.getText().charAt(scoreboard.getText().length() - 1) == ')')
-                        countBrackets++;
-                    if (scoreboard.getText().charAt(scoreboard.getText().length() - 1) == '(')
-                        countBrackets--;
-                    scoreboard.setText(scoreboard.getText().substring(0, scoreboard.getText().length() - 1));
-                }
+                actionBack();
             }
         });
         buttonSum.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (!scoreboard.getText().equals("")) {
-                    if (!isOperation() || scoreboard.getText().charAt(scoreboard.getText().length() - 1) == ')') {
-                        if (scoreboard.getText().charAt(scoreboard.getText().length() - 1) != '.') {
-                            scoreboard.setText(scoreboard.getText() + "+");
-                            dot = false;
-                        }
-                    }
-                }
+                actionOperator("+");
             }
         });
         buttonSub.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (!scoreboard.getText().equals("")) {
-                    if (!isOperation() || scoreboard.getText().charAt(scoreboard.getText().length() - 1) == ')') {
-                        if (scoreboard.getText().charAt(scoreboard.getText().length() - 1) != '.') {
-                            scoreboard.setText(scoreboard.getText() + "-");
-                            dot = false;
-                        }
-                    }
-                }
+                actionOperator("-");
             }
         });
         buttonMul.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (!scoreboard.getText().equals("")) {
-                    if (!isOperation() || scoreboard.getText().charAt(scoreboard.getText().length() - 1) == ')') {
-                        if (scoreboard.getText().charAt(scoreboard.getText().length() - 1) != '.') {
-                            scoreboard.setText(scoreboard.getText() + "*");
-                            dot = false;
-                        }
-                    }
-                }
+                actionOperator("*");
             }
         });
         buttonDivide.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (!scoreboard.getText().equals("")) {
-                    if (!isOperation() || scoreboard.getText().charAt(scoreboard.getText().length() - 1) == ')') {
-                        if (scoreboard.getText().charAt(scoreboard.getText().length() - 1) != '.') {
-                            scoreboard.setText(scoreboard.getText() + "/");
-                            dot = false;
-                        }
-                    }
-                }
+                actionOperator("/");
             }
         });
         buttonMod.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (!scoreboard.getText().equals("")) {
-                    if (!isOperation() || scoreboard.getText().charAt(scoreboard.getText().length() - 1) == ')') {
-                        if (scoreboard.getText().charAt(scoreboard.getText().length() - 1) != '.') {
-                            scoreboard.setText(scoreboard.getText() + "%");
-                            dot = false;
-                        }
-                    }
-                }
+                actionOperator("%");
             }
         });
         buttonLeft.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (scoreboard.getText().length() > 0) {
-                    if (isOperation() && scoreboard.getText().charAt(scoreboard.getText().length() - 1) != ')') {
-                        scoreboard.setText(scoreboard.getText() + "(");
-                        dot = false;
-                        countBrackets++;
-                    }
-                } else {
-                    scoreboard.setText(scoreboard.getText() + "(");
-                    dot = false;
-                    countBrackets++;
-                }
+                actionLeft();
             }
         });
         buttonRight.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (countBrackets > 0) {
-                    if (scoreboard.getText().charAt(scoreboard.getText().length() - 1) != '.' && !isOperation()) {
-                        scoreboard.setText(scoreboard.getText() + ")");
-                        dot = false;
-                        countBrackets--;
-                    }
-                }
+                actionRight();
             }
         });
         buttonSQRT.addActionListener(new ActionListener() {
@@ -429,13 +330,156 @@ public class MainFrame {
         buttonXDegreeY.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (!scoreboard.getText().equals("")) {
-                    if (!isOperation()) {
-                        scoreboard.setText(scoreboard.getText() + "^");
-                    }
-                }
+                actionXDegreeY();
             }
         });
+        scoreboard.addKeyListener(new KeyListener() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+            }
+
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_9 && e.isShiftDown()) {
+                    actionLeft();
+                }
+                if (e.getKeyCode() == KeyEvent.VK_0 && e.isShiftDown()) {
+                    actionRight();
+                }
+                if (e.getKeyCode() == KeyEvent.VK_PERIOD||e.getKeyCode()==KeyEvent.VK_DECIMAL) {
+                    actionDot();
+                }
+                if (e.getKeyCode() == KeyEvent.VK_0 || e.getKeyCode() == KeyEvent.VK_NUMPAD0) {
+                    action0();
+                }
+                if (e.getKeyCode() == KeyEvent.VK_1 || e.getKeyCode() == KeyEvent.VK_NUMPAD1) {
+                    actionNumber("1");
+                }
+                if (e.getKeyCode() == KeyEvent.VK_2 || e.getKeyCode() == KeyEvent.VK_NUMPAD2) {
+                    actionNumber("2");
+                }
+                if (e.getKeyCode() == KeyEvent.VK_3 || e.getKeyCode() == KeyEvent.VK_NUMPAD3) {
+                    actionNumber("3");
+                }
+                if (e.getKeyCode() == KeyEvent.VK_4 || e.getKeyCode() == KeyEvent.VK_NUMPAD4) {
+                    actionNumber("4");
+                }
+                if (e.getKeyCode() == KeyEvent.VK_5 || e.getKeyCode() == KeyEvent.VK_NUMPAD5) {
+                    actionNumber("5");
+                }
+                if (e.getKeyCode() == KeyEvent.VK_6 || e.getKeyCode() == KeyEvent.VK_NUMPAD6) {
+                    actionNumber("6");
+                }
+                if (e.getKeyCode() == KeyEvent.VK_7 || e.getKeyCode() == KeyEvent.VK_NUMPAD7) {
+                    actionNumber("7");
+                }
+                if (e.getKeyCode() == KeyEvent.VK_8 || e.getKeyCode() == KeyEvent.VK_NUMPAD8) {
+                    actionNumber("8");
+                }
+                if (e.getKeyCode() == KeyEvent.VK_9 || e.getKeyCode() == KeyEvent.VK_NUMPAD9) {
+                    actionNumber("9");
+                }
+                if (e.getKeyCode()==KeyEvent.VK_BACK_SPACE){
+                    actionBack();
+                }
+                if ((e.getKeyCode()==KeyEvent.VK_EQUALS&&e.isShiftDown())||e.getKeyCode()==107){
+                    actionOperator("+");
+                }
+                if (e.getKeyCode()==KeyEvent.VK_MINUS||e.getKeyCode()==KeyEvent.VK_SUBTRACT){
+                    actionOperator("-");
+                }
+                if ((e.getKeyCode()==KeyEvent.VK_8&&e.isShiftDown())||e.getKeyCode()==KeyEvent.VK_MULTIPLY){
+                    actionOperator("*");
+                }
+                if (e.getKeyCode()==KeyEvent.VK_SLASH||e.getKeyCode()==KeyEvent.VK_DIVIDE){
+                    actionOperator("/");
+                }
+                if (e.getKeyCode() == KeyEvent.VK_5 && e.isShiftDown()) {
+                    actionOperator("%");
+                }
+                if (e.getKeyCode() == KeyEvent.VK_6 && e.isShiftDown()) {
+                    actionOperator("^");
+                }
+            }
+
+            @Override
+            public void keyReleased(KeyEvent e) {
+
+            }
+        });
+    }
+
+    private void action0() {
+        if (scoreboard.getText().length() == 0)
+            scoreboard.setText("0");
+        else if (scoreboard.getText().equals("0") || isAddZero()
+                || scoreboard.getText().charAt(scoreboard.getText().length() - 1) == ')') {
+        } else scoreboard.setText(scoreboard.getText() + "0");
+    }
+    private void actionNumber(String number) {
+        if (scoreboard.getText().equals("0")) {
+            scoreboard.setText(number);
+        } else if (isAddZero()) {
+            scoreboard.setText(scoreboard.getText().substring(0, scoreboard.getText().lastIndexOf("0")) + "9");
+        } else scoreboard.setText(scoreboard.getText() + number);
+    }
+    private void actionDot(){
+        if (scoreboard.getText().equals("")) {
+        } else if (isOperation() || scoreboard.getText().charAt(scoreboard.getText().length() - 1) == ')') {
+        } else if (!dot) {
+            scoreboard.setText(scoreboard.getText() + ".");
+            dot = true;
+        }
+    }
+    private void actionBack(){
+        if (!scoreboard.getText().equals("")) {
+            if (scoreboard.getText().charAt(scoreboard.getText().length() - 1) == '.')
+                dot = false;
+            if (scoreboard.getText().charAt(scoreboard.getText().length() - 1) == ')')
+                countBrackets++;
+            if (scoreboard.getText().charAt(scoreboard.getText().length() - 1) == '(')
+                countBrackets--;
+            scoreboard.setText(scoreboard.getText().substring(0, scoreboard.getText().length() - 1));
+        }
+    }
+    private void actionOperator(String operator){
+        if (!scoreboard.getText().equals("")) {
+            if (!isOperation() || scoreboard.getText().charAt(scoreboard.getText().length() - 1) == ')') {
+                if (scoreboard.getText().charAt(scoreboard.getText().length() - 1) != '.') {
+                    scoreboard.setText(scoreboard.getText() + operator);
+                    dot = false;
+                }
+            }
+        }
+    }
+    private void actionLeft(){
+        if (scoreboard.getText().length() > 0) {
+            if (isOperation() && scoreboard.getText().charAt(scoreboard.getText().length() - 1) != ')') {
+                scoreboard.setText(scoreboard.getText() + "(");
+                dot = false;
+                countBrackets++;
+            }
+        } else {
+            scoreboard.setText(scoreboard.getText() + "(");
+            dot = false;
+            countBrackets++;
+        }
+    }
+    private void actionRight(){
+        if (countBrackets > 0) {
+            if (scoreboard.getText().charAt(scoreboard.getText().length() - 1) != '.' && !isOperation()) {
+                scoreboard.setText(scoreboard.getText() + ")");
+                dot = false;
+                countBrackets--;
+            }
+        }
+    }
+    private void actionXDegreeY(){
+        if (!scoreboard.getText().equals("")) {
+            if (!isOperation()) {
+                scoreboard.setText(scoreboard.getText() + "^");
+            }
+        }
     }
 
     private boolean isAddZero() {
@@ -447,7 +491,7 @@ public class MainFrame {
     }
 
     private boolean isOperation() {
-        if (scoreboard.getText().length() > 1) {
+        if (scoreboard.getText().length() > 0) {
             String temp = scoreboard.getText().substring(scoreboard.getText().length() - 1, scoreboard.getText().length());
             return (temp.equals("+") || temp.equals("-") || temp.equals("*") || temp.equals("/") ||
                     temp.equals("(") || temp.equals("%") || temp.equals("^"));
