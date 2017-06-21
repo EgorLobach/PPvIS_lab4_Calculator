@@ -15,7 +15,7 @@ public class DataBase {
         if (inputString.charAt(0) == '-') {
             inputString = "0" + inputString;
         }
-        while (inputString.indexOf("sqrt") > -1) {
+        while (inputString.contains("sqrt")) {
             int temp = 1;
             for (int i = inputString.indexOf("sqrt") + 5; i < inputString.length(); i++) {
                 if (inputString.charAt(i) == '(') temp++;
@@ -30,7 +30,7 @@ public class DataBase {
         return inputString;
     }
 
-    int priority(char operator) {
+    private int priority(char operator) {
         if (operator == Operators.DEGREE)
             return 2;
         else if (operator == Operators.MULTIPLY || operator == Operators.DIVIDE || operator == Operators.MOD) {
@@ -97,13 +97,13 @@ public class DataBase {
                 }
                 someOperators.add(symbol);
             } else {
-                String operand = "";
+                StringBuilder operand = new StringBuilder();
                 while (i < inputString.length() &&
                         (Character.isDigit(inputString.charAt(i)) || inputString.charAt(i) == '.')) {
-                    operand += inputString.charAt(i++);
+                    operand.append(inputString.charAt(i++));
                 }
                 --i;
-                node = new Node(operand);
+                node = new Node(operand.toString());
                 someNode.add(node);
             }
         }

@@ -10,14 +10,11 @@ import java.awt.*;
  */
 public class Main {
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                DataBase dataBase = new DataBase();
-                Controller controller = new Controller(dataBase);
-                MainFrame mainFrame = new MainFrame("Frame", new Dimension(700, 500), controller);
-                mainFrame.initMainFrame();
-            }
+        SwingUtilities.invokeLater(() -> {
+            DataBase dataBase = new DataBase();
+            Controller controller = new Controller(dataBase);
+            MainFrame mainFrame = new MainFrame("Frame", new Dimension(700, 500), controller);
+            mainFrame.initMainFrame();
         });
     }
 }

@@ -13,12 +13,12 @@ public class Node {
     private Node right;
     private boolean leaf;
 
-    public Node(Character character) {
+    Node(Character character) {
         this.operator = character;
         this.leaf = false;
     }
 
-    public Node(String operand) {
+    Node(String operand) {
         this.value = operand;
         this.leaf = true;
         this.operator = '0';
@@ -32,11 +32,11 @@ public class Node {
         return value;
     }
 
-    public void setLeft(Node left) {
+    void setLeft(Node left) {
         this.left = left;
     }
 
-    public void setRight(Node right) {
+    void setRight(Node right) {
         this.right = right;
     }
 
@@ -48,7 +48,7 @@ public class Node {
         return right;
     }
 
-    public void setValue(String value) {
+    void setValue(String value) {
         this.value = value;
     }
 

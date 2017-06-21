@@ -10,7 +10,7 @@ import java.util.List;
  * Created by anonymous on 05.06.2017.
  */
 public class Controller {
-    DataBase dataBase;
+    private DataBase dataBase;
     private Node node;
 
     public Controller(DataBase dataBase) {

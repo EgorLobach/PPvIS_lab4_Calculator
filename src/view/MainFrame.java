@@ -61,7 +61,7 @@ public class MainFrame {
         this.controller = controller;
         headFrame.setTitle(frame);
         headFrame.setSize(dimension);
-        headFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        headFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         headFrame.setLayout(new BorderLayout());
         scoreboard.setFont(new Font("Scoreboard", Font.ITALIC, 30));
         scoreboard.setEditable(false);
@@ -128,211 +128,90 @@ public class MainFrame {
     }
 
     private void controllingExpressionAction() {
-        clottingButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                controller.collapseTree();
-                treePanel.removeAll();
-                tree = new JTree(controller.buildTree());
-                for (int i = 0; i < tree.getRowCount(); i++) tree.expandRow(i);
-                result = getExpression((DefaultMutableTreeNode) tree.getPathForRow(0).getLastPathComponent());
-                expression.setText(result);
-                headFrame.add(initTreePanel(), BorderLayout.WEST);
-                headFrame.validate();
-                headFrame.repaint();
-            }
+        clottingButton.addActionListener(e -> {
+            controller.collapseTree();
+            treePanel.removeAll();
+            tree = new JTree(controller.buildTree());
+            for (int i = 0; i < tree.getRowCount(); i++) tree.expandRow(i);
+            result = getExpression((DefaultMutableTreeNode) tree.getPathForRow(0).getLastPathComponent());
+            expression.setText(result);
+            headFrame.add(initTreePanel(), BorderLayout.WEST);
+            headFrame.validate();
+            headFrame.repaint();
         });
-        deploymentButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                controller.deployTree();
-                treePanel.removeAll();
-                tree = new JTree(controller.buildTree());
-                for (int i = 0; i < tree.getRowCount(); i++) tree.expandRow(i);
-                result = getExpression((DefaultMutableTreeNode) tree.getPathForRow(0).getLastPathComponent());
-                expression.setText(result);
-                headFrame.add(initTreePanel(), BorderLayout.WEST);
-                headFrame.validate();
-                headFrame.repaint();
-            }
+        deploymentButton.addActionListener(e -> {
+            controller.deployTree();
+            treePanel.removeAll();
+            tree = new JTree(controller.buildTree());
+            for (int i = 0; i < tree.getRowCount(); i++) tree.expandRow(i);
+            result = getExpression((DefaultMutableTreeNode) tree.getPathForRow(0).getLastPathComponent());
+            expression.setText(result);
+            headFrame.add(initTreePanel(), BorderLayout.WEST);
+            headFrame.validate();
+            headFrame.repaint();
         });
     }
 
     private void buttonAction() {
-        buttonStart.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (!scoreboard.getText().isEmpty() && countBrackets == 0) {
-                    scoreboard.setText(controller.startCalc(scoreboard.getText()));
-                    dot = true;
-                    treePanel.removeAll();
-                    tree = new JTree(controller.buildTree());
-                    for (int i = 0; i < tree.getRowCount(); i++) tree.expandRow(i);
-                    result = getExpression((DefaultMutableTreeNode) tree.getPathForRow(0).getLastPathComponent());
-                    expression.setText(result);
-                    headFrame.add(initTreePanel(), BorderLayout.WEST);
-                    headFrame.validate();
-                    headFrame.repaint();
-                    clottingButton.setEnabled(true);
-                    deploymentButton.setEnabled(true);
+        buttonStart.addActionListener(e -> {
+            if (!scoreboard.getText().isEmpty() && countBrackets == 0) {
+                scoreboard.setText(controller.startCalc(scoreboard.getText()));
+                dot = true;
+                treePanel.removeAll();
+                tree = new JTree(controller.buildTree());
+                for (int i = 0; i < tree.getRowCount(); i++) tree.expandRow(i);
+                result = getExpression((DefaultMutableTreeNode) tree.getPathForRow(0).getLastPathComponent());
+                expression.setText(result);
+                headFrame.add(initTreePanel(), BorderLayout.WEST);
+                headFrame.validate();
+                headFrame.repaint();
+                clottingButton.setEnabled(true);
+                deploymentButton.setEnabled(true);
+            }
+        });
+        buttonDegree.addActionListener(e -> {
+            buttonXSquared.setEnabled(!buttonXSquared.isEnabled());
+            buttonXDegreeY.setEnabled(!buttonXDegreeY.isEnabled());
+        });
+        button0.addActionListener(e -> action0());
+        button1.addActionListener(e -> actionNumber("1"));
+        button2.addActionListener(e -> actionNumber("2"));
+        button3.addActionListener(e -> actionNumber("3"));
+        button4.addActionListener(e -> actionNumber("4"));
+        button5.addActionListener(e -> actionNumber("5"));
+        button6.addActionListener(e -> actionNumber("6"));
+        button7.addActionListener(e -> actionNumber("7"));
+        button8.addActionListener(e -> actionNumber("8"));
+        button9.addActionListener(e -> actionNumber("9"));
+        buttonDot.addActionListener(e -> actionDot());
+        buttonBack.addActionListener(e -> actionBack());
+        buttonSum.addActionListener(e -> actionOperator("+"));
+        buttonSub.addActionListener(e -> actionOperator("-"));
+        buttonMul.addActionListener(e -> actionOperator("*"));
+        buttonDivide.addActionListener(e -> actionOperator("/"));
+        buttonMod.addActionListener(e -> actionOperator("%"));
+        buttonLeft.addActionListener(e -> actionLeft());
+        buttonRight.addActionListener(e -> actionRight());
+        buttonSQRT.addActionListener(e -> {
+            if (isOperation() || scoreboard.getText().equals("")) {
+                scoreboard.setText(scoreboard.getText() + "sqrt(");
+                countBrackets++;
+            }
+        });
+        buttonInverse.addActionListener(e -> {
+            if (!scoreboard.getText().equals("") && countBrackets == 0 &&
+                    scoreboard.getText().charAt(scoreboard.getText().length() - 1) != '.') {
+                scoreboard.setText("1/(" + scoreboard.getText() + ")");
+            }
+        });
+        buttonXSquared.addActionListener(e -> {
+            if (!scoreboard.getText().equals("")) {
+                if (!isOperation()) {
+                    scoreboard.setText(scoreboard.getText() + "^2");
                 }
             }
         });
-        buttonDegree.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                buttonXSquared.setEnabled(!buttonXSquared.isEnabled());
-                buttonXDegreeY.setEnabled(!buttonXDegreeY.isEnabled());
-            }
-        });
-        button0.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                action0();
-            }
-        });
-        button1.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                actionNumber("1");
-            }
-        });
-        button2.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                actionNumber("2");
-            }
-        });
-        button3.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                actionNumber("3");
-            }
-        });
-        button4.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                actionNumber("4");
-            }
-        });
-        button5.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                actionNumber("5");
-            }
-        });
-        button6.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                actionNumber("6");
-            }
-        });
-        button7.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                actionNumber("7");
-            }
-        });
-        button8.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                actionNumber("8");
-            }
-        });
-        button9.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                actionNumber("9");
-            }
-        });
-        buttonDot.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                actionDot();
-            }
-        });
-        buttonBack.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                actionBack();
-            }
-        });
-        buttonSum.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                actionOperator("+");
-            }
-        });
-        buttonSub.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                actionOperator("-");
-            }
-        });
-        buttonMul.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                actionOperator("*");
-            }
-        });
-        buttonDivide.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                actionOperator("/");
-            }
-        });
-        buttonMod.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                actionOperator("%");
-            }
-        });
-        buttonLeft.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                actionLeft();
-            }
-        });
-        buttonRight.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                actionRight();
-            }
-        });
-        buttonSQRT.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (isOperation() || scoreboard.getText().equals("")) {
-                    scoreboard.setText(scoreboard.getText() + "sqrt(");
-                    countBrackets++;
-                }
-            }
-        });
-        buttonInverse.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (!scoreboard.getText().equals("") && countBrackets == 0 &&
-                        scoreboard.getText().charAt(scoreboard.getText().length() - 1) != '.') {
-                    scoreboard.setText("1/(" + scoreboard.getText() + ")");
-                }
-            }
-        });
-        buttonXSquared.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (!scoreboard.getText().equals("")) {
-                    if (!isOperation()) {
-                        scoreboard.setText(scoreboard.getText() + "^2");
-                    }
-                }
-            }
-        });
-        buttonXDegreeY.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                actionXDegreeY();
-            }
-        });
+        buttonXDegreeY.addActionListener(e -> actionXDegreeY());
         scoreboard.addKeyListener(new KeyListener() {
             @Override
             public void keyTyped(KeyEvent e) {
@@ -412,9 +291,10 @@ public class MainFrame {
     private void action0() {
         if (scoreboard.getText().length() == 0)
             scoreboard.setText("0");
-        else if (scoreboard.getText().equals("0") || isAddZero()
-                || scoreboard.getText().charAt(scoreboard.getText().length() - 1) == ')') {
-        } else scoreboard.setText(scoreboard.getText() + "0");
+        else if (!scoreboard.getText().equals("0") && !isAddZero()
+                && scoreboard.getText().charAt(scoreboard.getText().length() - 1) != ')') {
+            scoreboard.setText(scoreboard.getText() + "0");
+        }
     }
 
     private void actionNumber(String number) {
@@ -426,11 +306,11 @@ public class MainFrame {
     }
 
     private void actionDot() {
-        if (scoreboard.getText().equals("")) {
-        } else if (isOperation() || scoreboard.getText().charAt(scoreboard.getText().length() - 1) == ')') {
-        } else if (!dot) {
-            scoreboard.setText(scoreboard.getText() + ".");
-            dot = true;
+        if (!scoreboard.getText().equals("") && !isOperation() && scoreboard.getText().charAt(scoreboard.getText().length() - 1) != ')') {
+            if (!dot) {
+                scoreboard.setText(scoreboard.getText() + ".");
+                dot = true;
+            }
         }
     }
 
@@ -506,8 +386,8 @@ public class MainFrame {
     }
 
     private String getExpression(DefaultMutableTreeNode currentNode) {
-        String firstOperand = "";
-        String secondOperand = "";
+        String firstOperand;
+        String secondOperand;
         if (currentNode.isLeaf()) return currentNode.getUserObject().toString();
         else {
             DefaultMutableTreeNode firstChild = (DefaultMutableTreeNode) currentNode.getChildAt(0);
