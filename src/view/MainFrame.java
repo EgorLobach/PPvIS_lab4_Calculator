@@ -173,7 +173,7 @@ public class MainFrame {
         buttonDot.addActionListener(e -> actionDot());
         buttonBack.addActionListener(e -> actionBack());
         buttonSum.addActionListener(e -> actionOperator("+"));
-        buttonSub.addActionListener(e -> actionOperator("-"));
+        buttonSub.addActionListener(e -> actionSub());
         buttonMul.addActionListener(e -> actionOperator("*"));
         buttonDivide.addActionListener(e -> actionOperator("/"));
         buttonMod.addActionListener(e -> actionOperator("%"));
@@ -255,7 +255,7 @@ public class MainFrame {
                     actionOperator("+");
                 }
                 if (e.getKeyCode() == KeyEvent.VK_MINUS || e.getKeyCode() == KeyEvent.VK_SUBTRACT) {
-                    actionOperator("-");
+                    actionSub();
                 }
                 if ((e.getKeyCode() == KeyEvent.VK_8 && e.isShiftDown()) || e.getKeyCode() == KeyEvent.VK_MULTIPLY) {
                     actionOperator("*");
@@ -352,6 +352,20 @@ public class MainFrame {
         }
         scoreboard.requestFocusInWindow();
     }
+    private void actionSub(){
+        if (scoreboard.getText().equals("")) {
+            scoreboard.setText("-");
+        }
+        else
+            if (!isOperation() || scoreboard.getText().charAt(scoreboard.getText().length() - 1) == ')'
+                    || scoreboard.getText().charAt(scoreboard.getText().length() - 1) == '(') {
+                if (scoreboard.getText().charAt(scoreboard.getText().length() - 1) != '.') {
+                    scoreboard.setText(scoreboard.getText() + "-");
+                    dot = false;
+                }
+            }
+    }
+
 
     private void actionLeft() {
         if (scoreboard.getText().length() > 0) {
